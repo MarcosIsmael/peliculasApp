@@ -11,32 +11,46 @@ interface MoviesState {
 }
 const useMovies = () => {
 
-    const [moviesState, setMoviesState] = useState<MoviesState>()
-    const [isLoading, setIsLoading] = useState(true)
-
-    const getMovies = async()=>{
-        let respNowPlaying =  movieDB.get<MovieDBNowResults>('/movie/now_playing')
-        let respPopular =  movieDB.get<MovieDBNowResults>('/movie/popular')
-        let respTopRated = movieDB.get<MovieDBNowResults>('/movie/top_rated')
-        let respUpcoming = movieDB.get<MovieDBNowResults>('/movie/upcoming')
-
-        let result = await Promise.all([respNowPlaying,respPopular,respTopRated,respUpcoming])
-
-        setMoviesState({
-            nowPlaying:result[0].data.results,
-            popular:result[1].data.results,
-            topRated:result[2].data.results,
-            upcoming:result[3].data.results
+    const [moviesState, setMoviesState] = useState<MoviesState>({
+        nowPlaying : [],
+        popular:[],
+        topRated:[],
+        upcoming:[]
         })
+    const [isLoading, setIsLoading] = useState(true)
+    const [playing, setPlaying] = useState<Movie[]>([])
+    const [popular, setPopular] = useState<Movie[]>([])
+    const [rated, setRated] = useState<Movie[]>([])
+    const [coming, setcoming] = useState<Movie[]>([])
+    const getMovies = async()=>{
+         movieDB.get<MovieDBNowResults>('/movie/now_playing')
+         .then(resp => {setPlaying( resp.data.results);setIsLoading(false)})
+         movieDB.get<MovieDBNowResults>('/movie/popular')
+         .then(resp => { setPopular(resp.data.results);setIsLoading(false)})
+         movieDB.get<MovieDBNowResults>('/movie/top_rated')
+         .then(resp => {setRated(resp.data.results);setIsLoading(false)})
+         movieDB.get<MovieDBNowResults>('/movie/upcoming')
+         .then(resp => { setcoming(resp.data.results);setIsLoading(false)})
 
-        setIsLoading(false)
+        // let result = await Promise.all([respNowPlaying,respPopular,respTopRated,respUpcoming])
+
+        // setMoviesState({
+        //     nowPlaying:result[0].data.results,
+        //     popular:result[1].data.results,
+        //     topRated:result[2].data.results,
+        //     upcoming:result[3].data.results
+        // })
+
     }
 
     useEffect(() => {
       getMovies()
     }, [])
     return {
-     ...moviesState,
+        nowPlaying: playing,
+        popular,
+        topRated: rated,
+        upcoming :coming,
         isLoading
     }
 }

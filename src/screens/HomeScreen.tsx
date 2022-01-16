@@ -1,5 +1,5 @@
 import React from 'react'
-import { ActivityIndicator, Button, Dimensions, FlatList, Text, View } from 'react-native'
+import { ActivityIndicator, Dimensions, View } from 'react-native'
 import Carousel from 'react-native-snap-carousel';
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import MoviePosterCard from '../components/MoviePosterCard'
@@ -23,7 +23,7 @@ if(isLoading){
             <View style={{marginTop:top +20}}>
                 <View style={{height:440}}>
                         <Carousel
-                        data={nowPlaying!}
+                        data={nowPlaying}
                         renderItem={({item}:any)=> <MoviePosterCard movie={item}/>}
                         sliderWidth={windowWidth}
                         itemWidth={300}
@@ -31,9 +31,9 @@ if(isLoading){
                         />
                 </View>
             </View>
-            <HorizontalSlider title='Populares' movies={popular!}/>
-            <HorizontalSlider title='Top Rated' movies={topRated!}/>
-            <HorizontalSlider title='Upcoming' movies={upcoming!}/>
+            <HorizontalSlider title='Populares' movies={popular}/>
+            <HorizontalSlider title='Top Rated' movies={topRated}/>
+            <HorizontalSlider title='Upcoming' movies={upcoming}/>
 
         </ScrollView>
     )
