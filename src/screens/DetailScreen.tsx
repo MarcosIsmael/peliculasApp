@@ -1,17 +1,19 @@
 import { StackScreenProps } from '@react-navigation/stack'
 import React from 'react'
-import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Movie } from '../interfaces/movieDbInterface'
 import { RootStackParams } from '../navigation/Navigation'
 import Icon from 'react-native-vector-icons/Ionicons'
 import useMovieDetails from '../hooks/useMovieDetails'
+import MovieDetails from '../components/MovieDetails'
 interface Props extends StackScreenProps<RootStackParams>{}
 const screenHeight = Dimensions.get('window').height
 const DetailScreen = ({route}: Props) => {
 const movie = route.params as Movie
 const url = `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-useMovieDetails(movie.id)
+ const { isLoading, cast, movieFull }=useMovieDetails(movie.id)
+
     return (
         <ScrollView>
             <View style={styles.imageContainer}>
@@ -27,13 +29,11 @@ useMovieDetails(movie.id)
                     <Text style={styles.subTitle}>{movie.original_language}</Text>
                     <Text style={styles.title}>{movie.original_title}</Text>
                 </View>
-                <View style={styles.marginContainer}>
-                    <Icon 
-                    name='star-outline'
-                    color='gray'
-                    size={20}
-                    />
-                </View>
+                    {
+                        isLoading
+                        ? <ActivityIndicator size={35}color={'grey'} style={{marginTop: 20}}/>
+                        :<MovieDetails movieFull={movieFull!} cast={cast}/>
+                    }
         </ScrollView>
     )
 }
@@ -54,9 +54,9 @@ const styles =  StyleSheet.create({
         },
         shadowOpacity: 0.24,
         shadowRadius: 7,
+        elevation: 9,
         borderBottomEndRadius:25,
         borderBottomStartRadius:25,
-        elevation: 9,
     },
     marginContainer :{
         marginHorizontal:20,
