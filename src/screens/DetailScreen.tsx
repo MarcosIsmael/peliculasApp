@@ -4,25 +4,35 @@ import { Dimensions, Image, StyleSheet, Text, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Movie } from '../interfaces/movieDbInterface'
 import { RootStackParams } from '../navigation/Navigation'
-
+import Icon from 'react-native-vector-icons/Ionicons'
+import useMovieDetails from '../hooks/useMovieDetails'
 interface Props extends StackScreenProps<RootStackParams>{}
 const screenHeight = Dimensions.get('window').height
 const DetailScreen = ({route}: Props) => {
 const movie = route.params as Movie
 const url = `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+useMovieDetails(movie.id)
     return (
         <ScrollView>
             <View style={styles.imageContainer}>
-                <Image
-                source={{uri: url}}
-                style={styles.posterImage}
-                />
-
+                <View style={styles.imageBorder}>
+                    <Image
+                    source={{uri: url}}
+                    style={styles.posterImage}
+                    />
+                </View>
 
             </View>
                 <View style={styles.marginContainer}>
                     <Text style={styles.subTitle}>{movie.original_language}</Text>
                     <Text style={styles.title}>{movie.original_title}</Text>
+                </View>
+                <View style={styles.marginContainer}>
+                    <Icon 
+                    name='star-outline'
+                    color='gray'
+                    size={20}
+                    />
                 </View>
         </ScrollView>
     )
@@ -60,4 +70,12 @@ const styles =  StyleSheet.create({
         fontSize:20,
         fontWeight:'bold'
     },
+    imageBorder : {
+        flex: 1,
+        overflow:'hidden',
+        borderBottomEndRadius:25,
+        borderBottomStartRadius:25,
+
+    }
+
 })
