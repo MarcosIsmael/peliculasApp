@@ -17,8 +17,8 @@ interface ContexProps {
 export const GradiantProvider = ({children} :any)=>{
 
     const [colors, setColors] = useState<ImageColors>({
-        primary:'red',
-        secondary :'orange'
+        primary:'transparent',
+        secondary :'transparent'
     });
 
     const [prevColors, setPrevColors] = useState<ImageColors>({

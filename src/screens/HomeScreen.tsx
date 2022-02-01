@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { ActivityIndicator, Dimensions, View } from 'react-native'
 import Carousel from 'react-native-snap-carousel';
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -25,6 +25,12 @@ const getPosterColors = async (index : number )=>{
     const [primary = 'green', secondary='blue'] = await getImageColors(url)
     setMainColors({primary, secondary})
 }
+useEffect(() => {
+    if(nowPlaying.length >0 ){
+        getPosterColors(0)
+    }
+}, [nowPlaying]);
+
 
 if(isLoading){
     return (
