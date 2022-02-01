@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { ActivityIndicator, Dimensions, View } from 'react-native'
 import Carousel from 'react-native-snap-carousel';
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -7,17 +7,23 @@ import useMovies from '../hooks/useMovies'
 import { ScrollView } from 'react-native-gesture-handler';
 import HorizontalSlider from '../components/HorizontalSlider';
 import GradientBackground from '../components/GradientBackground';
+import ImageColors from 'react-native-image-colors';
+import getImageColors from '../helpers/getColores';
+import { GradiantContext } from '../context/GradiantContext';
 
 const HomeScreen = () => {
 const{ top }= useSafeAreaInsets()
 const { isLoading, nowPlaying,popular,topRated,upcoming }= useMovies()
 const { width:windowWidth } =Dimensions.get('window')
+const {setMainColors} = useContext(GradiantContext);
 
 
-const getPosterColors = (index : number )=>{
+const getPosterColors = async (index : number )=>{
     const movie = nowPlaying[index]
     const url = `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-
+    
+    const [primary = 'green', secondary='blue'] = await getImageColors(url)
+    setMainColors({primary, secondary})
 }
 
 if(isLoading){
@@ -38,7 +44,7 @@ if(isLoading){
                             sliderWidth={windowWidth}
                             itemWidth={300}
                             inactiveSlideOpacity={1}
-                            onBeforeSnapToItem={(index)=> getPosterColors(index)}
+                            onSnapToItem={(index)=> getPosterColors(index)}
                             />
                     </View>
                 </View>
